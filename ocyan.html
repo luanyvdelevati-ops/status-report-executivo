@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Status Report Executivo Ocyan - Produção</title>
+<style>
+:root {
+  --blue:#173a67;
+  --blue2:#10213a;
+  --teal:#00a3ad;
+  --ink:#172033;
+  --muted:#667085;
+  --line:#d9e2ec;
+  --bg:#eef3f7;
+  --card:#ffffff;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+}
+.toolbar {
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:#ffffffcc;
+  backdrop-filter: blur(8px);
+  border-bottom:1px solid var(--line);
+  padding:10px 18px;
+  display:flex;
+  justify-content:center;
+  gap:10px;
+}
+button {
+  background:var(--teal);
+  color:#fff;
+  border:0;
+  border-radius:10px;
+  padding:11px 18px;
+  font-weight:700;
+  cursor:pointer;
+}
+.hint {
+  color:var(--muted);
+  font-size:13px;
+  align-self:center;
+}
+.report {
+  width:210mm;
+  margin:18px auto;
+}
+.page {
+  width:210mm;
+  min-height:297mm;
+  background:#fff;
+  padding:14mm;
+  margin:0 auto 16px;
+  box-shadow:0 8px 28px rgba(16,33,58,.16);
+  page-break-after:always;
+  overflow:hidden;
+}
+.page:last-child { page-break-after:auto; }
+.cover {
+  background:linear-gradient(135deg,var(--blue2),var(--blue));
+  color:white;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+.logo {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:800;
+  letter-spacing:.4px;
+}
+.mark {
+  width:38px;
+  height:38px;
+  border-radius:10px;
+  background:#fff;
+  color:var(--blue);
+  display:grid;
+  place-items:center;
+  font-weight:900;
+}
+h1 {
+  font-size:34px;
+  line-height:1.08;
+  margin:34mm 0 8px;
+}
+.cover p {
+  color:#dce7f3;
+  font-size:15px;
+  margin:0;
+}
+.cover-box {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-top:20mm;
+}
+.cover-kpi {
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:14px;
+  padding:12px;
+}
+.cover-kpi b {
+  display:block;
+  font-size:25px;
+  margin-bottom:3px;
+}
+.cover-kpi span {
+  font-size:11px;
+  color:#dce7f3;
+}
+.footer {
+  font-size:11px;
+  color:#dce7f3;
+  display:flex;
+  justify-content:space-between;
+}
+.header {
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  border-bottom:2px solid var(--line);
+  padding-bottom:8px;
+  margin-bottom:14px;
+}
+.header h2 {
+  margin:0;
+  font-size:22px;
+  color:var(--blue);
+}
+.header small {
+  color:var(--muted);
+}
+.grid4 {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+.grid3 {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+.grid2 {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.card {
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:12px;
+  background:#fff;
+  break-inside:avoid;
+  page-break-inside:avoid;
+}
+.kpi {
+  font-size:28px;
+  font-weight:850;
+  color:var(--blue);
+  line-height:1;
+  margin-bottom:5px;
+}
+.label {
+  color:var(--muted);
+  font-size:12px;
+}
+.block-title {
+  font-size:15px;
+  color:var(--blue);
+  font-weight:800;
+  margin:0 0 8px;
+}
+.text {
+  color:#475467;
+  font-size:13px;
+  line-height:1.42;
+  margin:0;
+}
+.def ul {
+  margin:8px 0 0 17px;
+  padding:0;
+  font-size:12.6px;
+  line-height:1.45;
+  color:#475467;
+}
+.month {
+  background:#f8fafc;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:12px;
+}
+.month-title {
+  color:var(--blue);
+  font-size:21px;
+  font-weight:850;
+  margin-bottom:8px;
+}
+.mini {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+  margin-top:7px;
+}
+.mini div {
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:8px;
+  font-size:11px;
+  color:var(--muted);
+}
+.mini b {
+  display:block;
+  color:var(--blue);
+  font-size:16px;
+}
+.barrow {
+  margin:9px 0;
+}
+.barlabel {
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  font-size:11.5px;
+  color:#344054;
+  margin-bottom:4px;
+}
+.barlabel b {
+  color:var(--blue);
+}
+.bar {
+  height:8px;
+  background:#edf2f7;
+  border-radius:999px;
+  overflow:hidden;
+}
+.bar span {
+  display:block;
+  height:100%;
+  background:linear-gradient(90deg,var(--blue),var(--teal));
+}
+.cause-list {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+.cause {
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:10px;
+  min-height:58px;
+  display:grid;
+  grid-template-columns:34px 1fr;
+  gap:8px;
+  align-items:center;
+  font-size:12.2px;
+  color:#344054;
+}
+.cause .num {
+  background:#eaf8fa;
+  color:var(--teal);
+  border-radius:10px;
+  text-align:center;
+  padding:7px 0;
+  font-size:18px;
+  font-weight:850;
+}
+table {
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+  font-size:8.5px;
+}
+th {
+  background:#f1f5f9;
+  color:#344054;
+  text-align:left;
+  font-size:8.3px;
+}
+th, td {
+  border:1px solid #dbe4ee;
+  padding:5px;
+  vertical-align:top;
+  word-break:break-word;
+}
+tbody tr:nth-child(even) {
+  background:#fbfdff;
+}
+small {
+  color:var(--muted);
+}
+.nowrap {
+  white-space:nowrap;
+}
+.ticket-page {
+  padding:10mm;
+}
+.ticket-page .header {
+  margin-bottom:8px;
+}
+.ticket-page h2 {
+  font-size:18px;
+}
+@media screen and (max-width: 900px) {
+  .report,.page { width:100%; min-height:auto; }
+  .page { margin:0 0 12px; padding:18px; }
+  .grid4,.grid3,.grid2,.cover-box,.cause-list { grid-template-columns:1fr; }
+}
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+  html, body {
+    width:210mm;
+    background:#fff;
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
+  .toolbar {
+    display:none !important;
+  }
+  .report {
+    width:210mm;
+    margin:0;
+  }
+  .page {
+    width:210mm;
+    height:297mm;
+    min-height:297mm;
+    margin:0;
+    box-shadow:none;
+    border-radius:0;
+    page-break-after:always;
+    overflow:hidden;
+  }
+  .page:last-child {
+    page-break-after:auto;
+  }
+  .card,.month,.cause {
+    break-inside:avoid;
+    page-break-inside:avoid;
+  }
+}
+</style>
+<script>
+function exportPDF() {
+  window.print();
+}
+</script>
+</head>
+<body>
+  <div class="toolbar">
+    <button onclick="exportPDF()">Exportar PDF</button>
+    <div class="hint">Na janela de impressão, selecione “Salvar como PDF” e mantenha “Gráficos de plano de fundo” ativado.</div>
+  </div>
+
+  <main class="report">
+
+    <section class="page cover">
+      <div>
+        <div class="logo"><div class="mark">C</div><div>COMPLIANCE SOLUÇÕES</div></div>
+        <h1>Status Report Executivo<br>Ocyan · Produção</h1>
+        <p>Atendimentos realizados e causas raiz identificadas · Maio e Junho/2026</p>
+
+        <div class="cover-box">
+          <div class="cover-kpi"><b>33</b><span>tickets na base</span></div>
+          <div class="cover-kpi"><b>28</b><span>tickets em maio/junho</span></div>
+          <div class="cover-kpi"><b>15</b><span>atendimentos N1</span></div>
+          <div class="cover-kpi"><b>6</b><span>atendimentos N2</span></div>
+        </div>
+      </div>
+      <div class="footer"><span>Report final ao cliente</span><span>Ambiente PRD</span></div>
+    </section>
+
+    <section class="page">
+      <div class="header">
+        <div>
+          <h2>Visão geral dos atendimentos</h2>
+          <small>Consolidação executiva dos chamados analisados</small>
+        </div>
+        <div class="logo"><div class="mark">C</div></div>
+      </div>
+
+      <div class="grid4">
+        <div class="card"><div class="kpi">33</div><div class="label">tickets analisados</div></div>
+        <div class="card"><div class="kpi">19h</div><div class="label">horas Suporte N1</div></div>
+        <div class="card"><div class="kpi">8h15</div><div class="label">horas Suporte N2</div></div>
+        <div class="card"><div class="kpi">27h15</div><div class="label">horas N1 + N2</div></div>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <div class="grid2">
+        <div class="card def">
+          <div class="block-title">Suporte N1</div>
+          <p class="text">Atendimento de orientação e apoio ao usuário, com foco em continuidade operacional.</p>
+          <ul>
+            <li>Dúvidas de operação e uso da solução</li>
+            <li>Validações funcionais e conferências</li>
+            <li>Orientações sobre preenchimento, regras e processos</li>
+          </ul>
+        </div>
+        <div class="card def">
+          <div class="block-title">Suporte N2</div>
+          <p class="text">Atendimento técnico para análise de cenário, comportamento sistêmico e sustentação.</p>
+          <ul>
+            <li>Análise de XML, integrações e parametrizações</li>
+            <li>Reprocessamentos, status e validações técnicas</li>
+            <li>Investigação e registro de causa raiz</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <div class="grid2">
+        <div class="month">
+          <div class="month-title">Maio</div>
+          <div class="mini">
+            <div><b>18</b>Chamados</div>
+            <div><b>8</b>N1</div>
+            <div><b>3</b>N2</div>
+          </div>
+          <div class="mini">
+            <div><b>31h45</b>Horas totais</div>
+            <div><b>10h45</b>Horas N1</div>
+            <div><b>6h15</b>Horas N2</div>
+          </div>
+        </div>
+        <div class="month">
+          <div class="month-title">Junho</div>
+          <div class="mini">
+            <div><b>10</b>Chamados</div>
+            <div><b>6</b>N1</div>
+            <div><b>3</b>N2</div>
+          </div>
+          <div class="mini">
+            <div><b>11h45</b>Horas totais</div>
+            <div><b>7h15</b>Horas N1</div>
+            <div><b>2h</b>Horas N2</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="header">
+        <div>
+          <h2>Causas raiz e distribuição dos atendimentos</h2>
+          <small>Visibilidade dos principais temas tratados pela sustentação</small>
+        </div>
+        <div class="logo"><div class="mark">C</div></div>
+      </div>
+
+      <div class="card">
+        <div class="block-title">Principais causas raiz identificadas</div>
+        <div class="cause-list">
+          
+    <div class="cause">
+      <div class="num">13</div>
+      <div>Orientação ao usuário</div>
+    </div>
+    <div class="cause">
+      <div class="num">3</div>
+      <div>Aplicada nova versão para atender ao Município de Macaé</div>
+    </div>
+    <div class="cause">
+      <div class="num">2</div>
+      <div>Alteração de Status de documentos fiscais</div>
+    </div>
+    <div class="cause">
+      <div class="num">1</div>
+      <div>Apoio ao usuário</div>
+    </div>
+    <div class="cause">
+      <div class="num">1</div>
+      <div>Necessário preencher mais campos no conector para buscar o documento</div>
+    </div>
+    <div class="cause">
+      <div class="num">1</div>
+      <div>Instabilidade na Sefaz, realizado reenvio</div>
+    </div>
+    <div class="cause">
+      <div class="num">1</div>
+      <div>GAP no processo de encerramento contábil, atuação do time de produto na correção</div>
+    </div>
+    <div class="cause">
+      <div class="num">1</div>
+      <div>Ajuste nos dados enviados referente ao valor total do campo FCP</div>
+    </div>
+        </div>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <div class="grid2">
+        <div class="card">
+          <div class="block-title">Distribuição por tipo</div>
+          
+        <div class="barrow">
+          <div class="barlabel"><span>Suporte N1</span><b>15</b></div>
+          <div class="bar"><span style="width:45.5%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>Suporte N2</span><b>6</b></div>
+          <div class="bar"><span style="width:18.2%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>Erro/Bug</span><b>6</b></div>
+          <div class="bar"><span style="width:18.2%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>Adaptativa</span><b>3</b></div>
+          <div class="bar"><span style="width:9.1%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>Esclarecimento</span><b>1</b></div>
+          <div class="bar"><span style="width:3.0%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>Performance</span><b>1</b></div>
+          <div class="bar"><span style="width:3.0%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>Melhoria</span><b>1</b></div>
+          <div class="bar"><span style="width:3.0%"></span></div>
+        </div>
+        </div>
+        <div class="card">
+          <div class="block-title">Distribuição por área</div>
+          
+        <div class="barrow">
+          <div class="barlabel"><span>Integracao</span><b>8</b></div>
+          <div class="bar"><span style="width:24.2%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>NFSE Nota Fiscal de Servico Eletronica Mensageria</span><b>8</b></div>
+          <div class="bar"><span style="width:24.2%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>ECD</span><b>6</b></div>
+          <div class="bar"><span style="width:18.2%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>NFE Nota Fiscal Eletronica Mensageria</span><b>5</b></div>
+          <div class="bar"><span style="width:15.2%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>REINF</span><b>2</b></div>
+          <div class="bar"><span style="width:6.1%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>Reforma Tributária</span><b>1</b></div>
+          <div class="bar"><span style="width:3.0%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>Relatorios</span><b>1</b></div>
+          <div class="bar"><span style="width:3.0%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>EFD ICMS/IPI</span><b>1</b></div>
+          <div class="bar"><span style="width:3.0%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>MDE Mensageria</span><b>1</b></div>
+          <div class="bar"><span style="width:3.0%"></span></div>
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page ticket-page">
+      <div class="header">
+        <div>
+          <h2>Tickets analisados</h2>
+          <small>Relação completa com tipo, assunto e causa raiz</small>
+        </div>
+        <div class="logo"><div class="mark">C</div></div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:13%">Ticket</th>
+            <th style="width:15%">Tipo</th>
+            <th style="width:18%">Área</th>
+            <th style="width:29%">Assunto</th>
+            <th style="width:25%">Causa raiz</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+      <tr>
+        <td class="nowrap"><b>#204403</b><br><small>15/06/2026</small></td>
+        <td>Suporte N1</td>
+        <td>Reforma Tributária</td>
+        <td>ALTERAÇÃO NFSE ITAJAÍ</td>
+        <td>Orientação ao usuário</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#204402</b><br><small>15/06/2026</small></td>
+        <td>Suporte N1</td>
+        <td>Integracao</td>
+        <td>ACESSO NEGADO</td>
+        <td>Apoio ao usuário</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#204097</b><br><small>11/06/2026</small></td>
+        <td>Suporte N1</td>
+        <td>Integracao</td>
+        <td>REPROCESSAMENTO DE NF ANTIGA</td>
+        <td>Necessário preencher mais campos no conector para buscar o documento</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#204013</b><br><small>10/06/2026</small></td>
+        <td>Suporte N1</td>
+        <td>REINF</td>
+        <td>GERAÇÃO R-4080 - REINF</td>
+        <td>Orientação ao usuário</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#203715</b><br><small>08/06/2026</small></td>
+        <td>Adaptativa</td>
+        <td>NFSE Nota Fiscal de Servico Eletronica Mensageria</td>
+        <td>NOTAS COM STATUS APROVADO E SE...</td>
+        <td>Aplicada nova versão para atender ao Município de Macaé</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#203445</b><br><small>03/06/2026</small></td>
+        <td>Suporte N2</td>
+        <td>NFSE Nota Fiscal de Servico Eletronica Mensageria</td>
+        <td>STATUS NOTA DE SERVIÇO MANUAL </td>
+        <td>Alteração de Status de documentos fiscais</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#203439</b><br><small>03/06/2026</small></td>
+        <td>Suporte N1</td>
+        <td>Relatorios</td>
+        <td>RELÁTORIO K300 NÃO EXPORTANDO</td>
+        <td>Orientação ao usuário</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#203430</b><br><small>03/06/2026</small></td>
+        <td>Suporte N1</td>
+        <td>NFSE Nota Fiscal de Servico Eletronica Mensageria</td>
+        <td>EMISSÃO DE NOTA DE SERVIÇO PRE...</td>
+        <td>Orientação ao usuário</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#203070</b><br><small>01/06/2026</small></td>
+        <td>Suporte N2</td>
+        <td>NFSE Nota Fiscal de Servico Eletronica Mensageria</td>
+        <td>NOTA DE SERVIÇOS CANCELADAS </td>
+        <td>Alteração de Status de documentos fiscais</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#203068</b><br><small>01/06/2026</small></td>
+        <td>Suporte N2</td>
+        <td>NFE Nota Fiscal Eletronica Mensageria</td>
+        <td>NOTA TRAVADA NO COMPLIANCE</td>
+        <td>Instabilidade na Sefaz, realizado reenvio</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#202608</b><br><small>27/05/2026</small></td>
+        <td>Erro/Bug</td>
+        <td>ECD</td>
+        <td>ERRO NA RETIFICAÇÃO DA ECD 202...</td>
+        <td>GAP no processo de encerramento contábil, atuação do time de produto na correção</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#202598</b><br><small>26/05/2026</small></td>
+        <td>Suporte N2</td>
+        <td>NFE Nota Fiscal Eletronica Mensageria</td>
+        <td>NF 659</td>
+        <td>Ajuste nos dados enviados referente ao valor total do campo FCP</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#202323</b><br><small>22/05/2026</small></td>
+        <td>Suporte N1</td>
+        <td>Integracao</td>
+        <td>NOTA DE IMPORTAÇÃO NÃO INTEGRA...</td>
+        <td>Orientação ao usuário</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#202246</b><br><small>22/05/2026</small></td>
+        <td>Suporte N2</td>
+        <td>NFE Nota Fiscal Eletronica Mensageria</td>
+        <td>ERRO DE VALIDAÇÃO EM NFE</td>
+        <td>Ajuste nas validações de cálculo de ICMS</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#202052</b><br><small>21/05/2026</small></td>
+        <td>Adaptativa</td>
+        <td>NFSE Nota Fiscal de Servico Eletronica Mensageria</td>
+        <td>REJEIÇÃO EM NFSE MACAÉ</td>
+        <td>Aplicada nova versão para atender ao Município de Macaé</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#201962</b><br><small>20/05/2026</small></td>
+        <td>Suporte N1</td>
+        <td>NFE Nota Fiscal Eletronica Mensageria</td>
+        <td>ERRO DE VALIDAÇÃO EM NFE</td>
+        <td>Orientação ao usuário</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#201960</b><br><small>20/05/2026</small></td>
+        <td>Adaptativa</td>
+        <td>NFSE Nota Fiscal de Servico Eletronica Mensageria</td>
+        <td>DIVERGÊNCIA EM INSS DE NOTA</td>
+        <td>Aplicada nova versão para atender ao Município de Macaé</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#201919</b><br><small>20/05/2026</small></td>
+        <td>Erro/Bug</td>
+        <td>Integracao</td>
+        <td>ERRO DE ESTRUTURA XML</td>
+        <td>Atualização no conector no momento de envio do lote, foi necessário ajustar o status e reenviar o lote para recuperação no ERP</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#201667</b><br><small>18/05/2026</small></td>
+        <td>Suporte N1</td>
+        <td>ECD</td>
+        <td>ECD TKP COM ERRO NOS BLOCOS </td>
+        <td>Orientação ao usuário</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#201291</b><br><small>14/05/2026</small></td>
+        <td>Suporte N1</td>
+        <td>NFE Nota Fiscal Eletronica Mensageria</td>
+        <td>ERRO DE CST</td>
+        <td>Orientação ao usuário</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#201232</b><br><small>13/05/2026</small></td>
+        <td>Suporte N1</td>
+        <td>EFD ICMS/IPI</td>
+        <td>ITENS SEM NCM - EFD FISCAL</td>
+        <td>Orientação ao usuário</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#201188</b><br><small>13/05/2026</small></td>
+        <td>Suporte N1</td>
+        <td>ECD</td>
+        <td>BLOCOS I355 E J150</td>
+        <td>Orientação ao usuário</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#201187</b><br><small>13/05/2026</small></td>
+        <td>Suporte N1</td>
+        <td>ECD</td>
+        <td>BLOCO K100 NÃO APARECE NA ECD</td>
+        <td>Orientação ao usuário</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#201006</b><br><small>12/05/2026</small></td>
+        <td>Suporte N2</td>
+        <td>Integracao</td>
+        <td>CNPJ NÃO APARECE NO CONECTOR</td>
+        <td>Ativação dos Parâmetros ao CNPJ informado</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#200999</b><br><small>11/05/2026</small></td>
+        <td>Suporte N1</td>
+        <td>ECD</td>
+        <td>ERRO ECD - REGISTRO K030</td>
+        <td>Orientação ao usuário</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#200702</b><br><small>07/05/2026</small></td>
+        <td>Erro/Bug</td>
+        <td>Integracao</td>
+        <td>NOTAS SEM PIS E COFINS SOBRE F...</td>
+        <td>O time de integração realizou a inserção dos impostos no banco de dados, foi uma solução paliativa visto que não foi possível replicar o cenário nem em PRD e nem em HML</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#200547</b><br><small>05/05/2026</small></td>
+        <td>Esclarecimento</td>
+        <td>NFSE Nota Fiscal de Servico Eletronica Mensageria</td>
+        <td>EMISSÃO NOTA FISCAL SERVIÇO PR...</td>
+        <td>O provedor GissOnline para Santos não está adepto ao leiaute padrão nacional, não permitindo o envio das retenções na tag do CSLL </td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#200485</b><br><small>05/05/2026</small></td>
+        <td>Erro/Bug</td>
+        <td>REINF</td>
+        <td>REINF TKP ABR-26 NÃO PROCESSA ...</td>
+        <td>Trigger de envio dos eventos ao Ecac estava em looping, correção realizada pelo time de Produto</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#199752</b><br><small>27/04/2026</small></td>
+        <td>Erro/Bug</td>
+        <td>NFSE Nota Fiscal de Servico Eletronica Mensageria</td>
+        <td>CANCELAMENTO NA COMPLIANCE </td>
+        <td>Adaptação dos serviços para emissão de Cancelamento para Macaé</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#199525</b><br><small>23/04/2026</small></td>
+        <td>Suporte N1</td>
+        <td>ECD</td>
+        <td>ECD - ERROS DE VALIDAÇÃO</td>
+        <td>Orientação ao usuário</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#198603</b><br><small>15/04/2026</small></td>
+        <td>Erro/Bug</td>
+        <td>Integracao</td>
+        <td>TOTALIZADOR DA NF-E ESTA ZERAD...</td>
+        <td>Ajuste na rotina para cálculo dos totais</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#181856</b><br><small>10/10/2025</small></td>
+        <td>Performance</td>
+        <td>MDE Mensageria</td>
+        <td>FUNCIONALIDADE DE REENVIO DE N...</td>
+        <td>Ajustes no botão para reenvio dos documentos antigos</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#137247</b><br><small>01/02/2024</small></td>
+        <td>Melhoria</td>
+        <td>Integracao</td>
+        <td>INTEGRAÇÃO ANEXO PDF NFE / CTE...</td>
+        <td>Solução já se encontra em HML e será aplicada no patch de 30/06</td>
+      </tr>
+    
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+</body>
+</html>

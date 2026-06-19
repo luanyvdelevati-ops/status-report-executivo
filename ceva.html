@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Status Report Executivo CEVA - Produção</title>
+<style>
+:root {
+  --blue:#173a67;
+  --blue2:#10213a;
+  --teal:#00a3ad;
+  --ink:#172033;
+  --muted:#667085;
+  --line:#d9e2ec;
+  --bg:#eef3f7;
+  --card:#ffffff;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+}
+.toolbar {
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:#ffffffcc;
+  backdrop-filter: blur(8px);
+  border-bottom:1px solid var(--line);
+  padding:10px 18px;
+  display:flex;
+  justify-content:center;
+  gap:10px;
+}
+button {
+  background:var(--teal);
+  color:#fff;
+  border:0;
+  border-radius:10px;
+  padding:11px 18px;
+  font-weight:700;
+  cursor:pointer;
+}
+.hint {
+  color:var(--muted);
+  font-size:13px;
+  align-self:center;
+}
+.report {
+  width:210mm;
+  margin:18px auto;
+}
+.page {
+  width:210mm;
+  min-height:297mm;
+  background:#fff;
+  padding:14mm;
+  margin:0 auto 16px;
+  box-shadow:0 8px 28px rgba(16,33,58,.16);
+  page-break-after:always;
+  overflow:hidden;
+}
+.page:last-child { page-break-after:auto; }
+.cover {
+  background:linear-gradient(135deg,var(--blue2),var(--blue));
+  color:white;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+.logo {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:800;
+  letter-spacing:.4px;
+}
+.mark {
+  width:38px;
+  height:38px;
+  border-radius:10px;
+  background:#fff;
+  color:var(--blue);
+  display:grid;
+  place-items:center;
+  font-weight:900;
+}
+h1 {
+  font-size:34px;
+  line-height:1.08;
+  margin:34mm 0 8px;
+}
+.cover p {
+  color:#dce7f3;
+  font-size:15px;
+  margin:0;
+}
+.cover-box {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-top:20mm;
+}
+.cover-kpi {
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:14px;
+  padding:12px;
+}
+.cover-kpi b {
+  display:block;
+  font-size:25px;
+  margin-bottom:3px;
+}
+.cover-kpi span {
+  font-size:11px;
+  color:#dce7f3;
+}
+.footer {
+  font-size:11px;
+  color:#dce7f3;
+  display:flex;
+  justify-content:space-between;
+}
+.header {
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  border-bottom:2px solid var(--line);
+  padding-bottom:8px;
+  margin-bottom:14px;
+}
+.header h2 {
+  margin:0;
+  font-size:22px;
+  color:var(--blue);
+}
+.header small {
+  color:var(--muted);
+}
+.grid4 {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+.grid3 {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+.grid2 {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.card {
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:12px;
+  background:#fff;
+  break-inside:avoid;
+  page-break-inside:avoid;
+}
+.kpi {
+  font-size:28px;
+  font-weight:850;
+  color:var(--blue);
+  line-height:1;
+  margin-bottom:5px;
+}
+.label {
+  color:var(--muted);
+  font-size:12px;
+}
+.block-title {
+  font-size:15px;
+  color:var(--blue);
+  font-weight:800;
+  margin:0 0 8px;
+}
+.text {
+  color:#475467;
+  font-size:13px;
+  line-height:1.42;
+  margin:0;
+}
+.def ul {
+  margin:8px 0 0 17px;
+  padding:0;
+  font-size:12.6px;
+  line-height:1.45;
+  color:#475467;
+}
+.month {
+  background:#f8fafc;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:12px;
+}
+.month-title {
+  color:var(--blue);
+  font-size:21px;
+  font-weight:850;
+  margin-bottom:8px;
+}
+.mini {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+  margin-top:7px;
+}
+.mini div {
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:8px;
+  font-size:11px;
+  color:var(--muted);
+}
+.mini b {
+  display:block;
+  color:var(--blue);
+  font-size:16px;
+}
+.barrow {
+  margin:9px 0;
+}
+.barlabel {
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  font-size:11.5px;
+  color:#344054;
+  margin-bottom:4px;
+}
+.barlabel b {
+  color:var(--blue);
+}
+.bar {
+  height:8px;
+  background:#edf2f7;
+  border-radius:999px;
+  overflow:hidden;
+}
+.bar span {
+  display:block;
+  height:100%;
+  background:linear-gradient(90deg,var(--blue),var(--teal));
+}
+.cause-list {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+.cause {
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:10px;
+  min-height:58px;
+  display:grid;
+  grid-template-columns:34px 1fr;
+  gap:8px;
+  align-items:center;
+  font-size:12.2px;
+  color:#344054;
+}
+.cause .num {
+  background:#eaf8fa;
+  color:var(--teal);
+  border-radius:10px;
+  text-align:center;
+  padding:7px 0;
+  font-size:18px;
+  font-weight:850;
+}
+table {
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+  font-size:8.5px;
+}
+th {
+  background:#f1f5f9;
+  color:#344054;
+  text-align:left;
+  font-size:8.3px;
+}
+th, td {
+  border:1px solid #dbe4ee;
+  padding:5px;
+  vertical-align:top;
+  word-break:break-word;
+}
+tbody tr:nth-child(even) {
+  background:#fbfdff;
+}
+small {
+  color:var(--muted);
+}
+.nowrap {
+  white-space:nowrap;
+}
+.ticket-page {
+  padding:10mm;
+}
+.ticket-page .header {
+  margin-bottom:8px;
+}
+.ticket-page h2 {
+  font-size:18px;
+}
+@media screen and (max-width: 900px) {
+  .report,.page { width:100%; min-height:auto; }
+  .page { margin:0 0 12px; padding:18px; }
+  .grid4,.grid3,.grid2,.cover-box,.cause-list { grid-template-columns:1fr; }
+}
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+  html, body {
+    width:210mm;
+    background:#fff;
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
+  .toolbar {
+    display:none !important;
+  }
+  .report {
+    width:210mm;
+    margin:0;
+  }
+  .page {
+    width:210mm;
+    height:297mm;
+    min-height:297mm;
+    margin:0;
+    box-shadow:none;
+    border-radius:0;
+    page-break-after:always;
+    overflow:hidden;
+  }
+  .page:last-child {
+    page-break-after:auto;
+  }
+  .card,.month,.cause {
+    break-inside:avoid;
+    page-break-inside:avoid;
+  }
+}
+</style>
+<script>
+function exportPDF() {
+  window.print();
+}
+</script>
+</head>
+<body>
+  <div class="toolbar">
+    <button onclick="exportPDF()">Exportar PDF</button>
+    <div class="hint">Na janela de impressão, selecione “Salvar como PDF” e mantenha “Gráficos de plano de fundo” ativado.</div>
+  </div>
+
+  <main class="report">
+
+    <section class="page cover">
+      <div>
+        <div class="logo"><div class="mark">C</div><div>COMPLIANCE SOLUÇÕES</div></div>
+        <h1>Status Report Executivo<br>CEVA · Produção</h1>
+        <p>Atendimentos realizados e causas raiz identificadas · Maio e Junho/2026</p>
+
+        <div class="cover-box">
+          <div class="cover-kpi"><b>35</b><span>tickets na base</span></div>
+          <div class="cover-kpi"><b>29</b><span>tickets em maio/junho</span></div>
+          <div class="cover-kpi"><b>8</b><span>atendimentos N1</span></div>
+          <div class="cover-kpi"><b>6</b><span>atendimentos N2</span></div>
+        </div>
+      </div>
+      <div class="footer"><span>Report final ao cliente</span><span>Ambiente PRD</span></div>
+    </section>
+
+    <section class="page">
+      <div class="header">
+        <div>
+          <h2>Visão geral dos atendimentos</h2>
+          <small>Consolidação executiva dos chamados analisados</small>
+        </div>
+        <div class="logo"><div class="mark">C</div></div>
+      </div>
+
+      <div class="grid4">
+        <div class="card"><div class="kpi">35</div><div class="label">tickets analisados</div></div>
+        <div class="card"><div class="kpi">29</div><div class="label">tickets em maio/junho</div></div>
+        <div class="card"><div class="kpi">11</div><div class="label">tickets classificados como erro/bug</div></div>
+        <div class="card"><div class="kpi">1</div><div class="label">tickets classificados como N3</div></div>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <div class="grid2">
+        <div class="card def">
+          <div class="block-title">Suporte N1</div>
+          <p class="text">Atendimento de orientação e apoio ao usuário, com foco em continuidade operacional.</p>
+          <ul>
+            <li>Dúvidas de operação e uso da solução</li>
+            <li>Validações funcionais e conferências</li>
+            <li>Orientações sobre preenchimento, regras e processos</li>
+          </ul>
+        </div>
+        <div class="card def">
+          <div class="block-title">Suporte N2</div>
+          <p class="text">Atendimento técnico para análise de cenário, comportamento sistêmico e sustentação.</p>
+          <ul>
+            <li>Análise de XML, integrações e parametrizações</li>
+            <li>Reprocessamentos, status e validações técnicas</li>
+            <li>Investigação e registro de causa raiz</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <div class="grid2">
+        <div class="month">
+          <div class="month-title">Maio</div>
+          <div class="mini">
+            <div><b>18</b>Chamados</div>
+            <div><b>5</b>N1</div>
+            <div><b>3</b>N2</div>
+          </div>
+          <div class="mini">
+            <div><b>7</b>Erro/Bug</div>
+            <div><b>0</b>Instabilidade</div>
+            <div><b>1</b>Adaptação/Melhoria</div>
+          </div>
+        </div>
+        <div class="month">
+          <div class="month-title">Junho</div>
+          <div class="mini">
+            <div><b>11</b>Chamados</div>
+            <div><b>2</b>N1</div>
+            <div><b>3</b>N2</div>
+          </div>
+          <div class="mini">
+            <div><b>2</b>Erro/Bug</div>
+            <div><b>1</b>Instabilidade</div>
+            <div><b>2</b>Adaptação/RT</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="header">
+        <div>
+          <h2>Causas raiz e distribuição dos atendimentos</h2>
+          <small>Visibilidade dos principais temas tratados pela sustentação</small>
+        </div>
+        <div class="logo"><div class="mark">C</div></div>
+      </div>
+
+      <div class="card">
+        <div class="block-title">Principais causas raiz identificadas</div>
+        <div class="cause-list">
+          
+    <div class="cause">
+      <div class="num">4</div>
+      <div>Orientação ao usuário </div>
+    </div>
+    <div class="cause">
+      <div class="num">3</div>
+      <div>Corrigido o envio do Pis/Cofins devido para o município de Gravataí</div>
+    </div>
+    <div class="cause">
+      <div class="num">2</div>
+      <div>Cte não baixado devido a ajuste realizado no DFe, subir paliativamente por se tratar de CTE antigo</div>
+    </div>
+    <div class="cause">
+      <div class="num">2</div>
+      <div>CTEs enviados e integrados no ambiente HML</div>
+    </div>
+    <div class="cause">
+      <div class="num">2</div>
+      <div>Extração de Relatório</div>
+    </div>
+    <div class="cause">
+      <div class="num">1</div>
+      <div>Documentos autorizados - Sem ação do suporte</div>
+    </div>
+    <div class="cause">
+      <div class="num">1</div>
+      <div>Em analise</div>
+    </div>
+    <div class="cause">
+      <div class="num">1</div>
+      <div>Ajuste no serviço Dfe</div>
+    </div>
+        </div>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <div class="grid2">
+        <div class="card">
+          <div class="block-title">Distribuição por tipo</div>
+          
+        <div class="barrow">
+          <div class="barlabel"><span>Erro/Bug</span><b>11</b></div>
+          <div class="bar"><span style="width:31.4%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>Suporte N1</span><b>8</b></div>
+          <div class="bar"><span style="width:22.9%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>Suporte N2</span><b>6</b></div>
+          <div class="bar"><span style="width:17.1%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>Instabilidade Municipal</span><b>2</b></div>
+          <div class="bar"><span style="width:5.7%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>Reforma Tributária</span><b>2</b></div>
+          <div class="bar"><span style="width:5.7%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>Não informado</span><b>1</b></div>
+          <div class="bar"><span style="width:2.9%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>Instabilidade no Provedor </span><b>1</b></div>
+          <div class="bar"><span style="width:2.9%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>Suporte N3</span><b>1</b></div>
+          <div class="bar"><span style="width:2.9%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>Criar Usuário</span><b>1</b></div>
+          <div class="bar"><span style="width:2.9%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>Adaptativa</span><b>1</b></div>
+          <div class="bar"><span style="width:2.9%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>Melhoria</span><b>1</b></div>
+          <div class="bar"><span style="width:2.9%"></span></div>
+        </div>
+        </div>
+        <div class="card">
+          <div class="block-title">Distribuição por área</div>
+          
+        <div class="barrow">
+          <div class="barlabel"><span>NFSE Nota Fiscal de Servico Eletronica Mensageria</span><b>13</b></div>
+          <div class="bar"><span style="width:37.1%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>Armazenamento XML de CTE de Terceiro</span><b>5</b></div>
+          <div class="bar"><span style="width:14.3%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>Entrada Automatica de CTe</span><b>3</b></div>
+          <div class="bar"><span style="width:8.6%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>NFE Nota Fiscal Eletronica Mensageria</span><b>2</b></div>
+          <div class="bar"><span style="width:5.7%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>REINF</span><b>2</b></div>
+          <div class="bar"><span style="width:5.7%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>Relatorios</span><b>2</b></div>
+          <div class="bar"><span style="width:5.7%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>CTE - Conhecimento de Transporte Mensageria</span><b>2</b></div>
+          <div class="bar"><span style="width:5.7%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>EFD ICMS/IPI</span><b>2</b></div>
+          <div class="bar"><span style="width:5.7%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>Reforma Tributária</span><b>1</b></div>
+          <div class="bar"><span style="width:2.9%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>DIME SC</span><b>1</b></div>
+          <div class="bar"><span style="width:2.9%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>EFD Contribuicoes</span><b>1</b></div>
+          <div class="bar"><span style="width:2.9%"></span></div>
+        </div>
+        <div class="barrow">
+          <div class="barlabel"><span>Help Desk</span><b>1</b></div>
+          <div class="bar"><span style="width:2.9%"></span></div>
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page ticket-page">
+      <div class="header">
+        <div>
+          <h2>Tickets analisados</h2>
+          <small>Relação completa com tipo, assunto e causa raiz</small>
+        </div>
+        <div class="logo"><div class="mark">C</div></div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:13%">Ticket</th>
+            <th style="width:15%">Tipo</th>
+            <th style="width:18%">Área</th>
+            <th style="width:29%">Assunto</th>
+            <th style="width:25%">Causa raiz</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+      <tr>
+        <td class="nowrap"><b>#204477</b><br><small>16/06/2026</small></td>
+        <td>Reforma Tributária</td>
+        <td>NFSE Nota Fiscal de Servico Eletronica Mensageria</td>
+        <td>COMUNICADO IMPORTANTE – ATUALI...</td>
+        <td>NT008 - Atualização DANFE - Patch 30/06</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#204469</b><br><small>16/06/2026</small></td>
+        <td>Não classificado</td>
+        <td>Armazenamento XML de CTE de Terceiro</td>
+        <td>CONVERSÃO CTE TERCEIRO</td>
+        <td>Em analise</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#204413</b><br><small>15/06/2026</small></td>
+        <td>Erro/Bug</td>
+        <td>NFE Nota Fiscal Eletronica Mensageria</td>
+        <td>NFE MERCANTIS ARMAZ. GERAL COM...</td>
+        <td>Documentos autorizados - Sem ação do suporte</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#204408</b><br><small>15/06/2026</small></td>
+        <td>Suporte N2</td>
+        <td>Armazenamento XML de CTE de Terceiro</td>
+        <td>CONVERSÃO CTE&#x27;S TERCEIROS</td>
+        <td>Cte não baixado devido a ajuste realizado no DFe, subir paliativamente por se tratar de CTE antigo</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#204361</b><br><small>15/06/2026</small></td>
+        <td>Reforma Tributária</td>
+        <td>Reforma Tributária</td>
+        <td>LEIAUTES DE INTEGRAÇÃO - REFOR...</td>
+        <td>Solicitação de Manuais de Integração - Documentação em Elaboração para divulgação</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#204267</b><br><small>12/06/2026</small></td>
+        <td>Erro/Bug</td>
+        <td>Armazenamento XML de CTE de Terceiro</td>
+        <td>CONVERSÃO CTE TERCEIROS</td>
+        <td>Ajuste no serviço Dfe</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#204040</b><br><small>10/06/2026</small></td>
+        <td>Suporte N2</td>
+        <td>Relatorios</td>
+        <td>REVISÃO MENSAL DE ACESSOS - SI...</td>
+        <td>Extração de Relatório</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#203992</b><br><small>10/06/2026</small></td>
+        <td>Suporte N1</td>
+        <td>DIME SC</td>
+        <td>GERAÇÃO DIME SEM MOVIMENTO</td>
+        <td>Orientação ao usuário </td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#203521</b><br><small>05/06/2026</small></td>
+        <td>Instabilidade no Provedor </td>
+        <td>NFSE Nota Fiscal de Servico Eletronica Mensageria</td>
+        <td>NOTAS PARADAS PREFEITURA DIADE...</td>
+        <td>Acompanhamento</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#203396</b><br><small>03/06/2026</small></td>
+        <td>Suporte N1</td>
+        <td>NFSE Nota Fiscal de Servico Eletronica Mensageria</td>
+        <td>ERRO XML PREFEITURA DE BETIM I...</td>
+        <td>Orientação ao usuário </td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#203282</b><br><small>02/06/2026</small></td>
+        <td>Suporte N2</td>
+        <td>NFSE Nota Fiscal de Servico Eletronica Mensageria</td>
+        <td>NOTAS CANCELADAS FM COM ERRO N...</td>
+        <td>Alteração de Status</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#202963</b><br><small>29/05/2026</small></td>
+        <td>Erro/Bug</td>
+        <td>NFSE Nota Fiscal de Servico Eletronica Mensageria</td>
+        <td>LENTIDÃO NO PROCESSAMENTO COMP...</td>
+        <td>Lentidão no Provedor GissOnline - Adaptações no serviço</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#202843</b><br><small>28/05/2026</small></td>
+        <td>Suporte N2</td>
+        <td>Relatorios</td>
+        <td>RELATÓRIO EXCEL DE PARTICIPANT...</td>
+        <td>Extração de Relatório</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#202414</b><br><small>25/05/2026</small></td>
+        <td>Suporte N2</td>
+        <td>Entrada Automatica de CTe</td>
+        <td>CANCELAMENTO CTE</td>
+        <td>Alteração de Status </td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#202324</b><br><small>25/05/2026</small></td>
+        <td>Suporte N3</td>
+        <td>Armazenamento XML de CTE de Terceiro</td>
+        <td>DESACORDO CTE</td>
+        <td>Liberação de Usuário no Portal UX para realizar desacordo de CTE</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#202290</b><br><small>22/05/2026</small></td>
+        <td>Erro/Bug</td>
+        <td>NFSE Nota Fiscal de Servico Eletronica Mensageria</td>
+        <td>PIS E COFINS GRAVATAI</td>
+        <td>Corrigido o envio do Pis/Cofins devido para o município de Gravataí</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#202247</b><br><small>22/05/2026</small></td>
+        <td>Erro/Bug</td>
+        <td>NFSE Nota Fiscal de Servico Eletronica Mensageria</td>
+        <td>FALHA CANCELAMENTO - GRAVATAI</td>
+        <td>Ajuste no Compliance para geração de Cancelamentos para o município de Gravataí</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#201961</b><br><small>20/05/2026</small></td>
+        <td>Suporte N1</td>
+        <td>EFD Contribuicoes</td>
+        <td>CÓDIGO PARTICIPANTE EX</td>
+        <td>Orientação ao usuário </td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#201925</b><br><small>20/05/2026</small></td>
+        <td>Erro/Bug</td>
+        <td>NFSE Nota Fiscal de Servico Eletronica Mensageria</td>
+        <td>CRITICO - FALHA DE EMISSÃO GM ...</td>
+        <td>Corrigido o envio do Pis/Cofins devido para o município de Gravataí</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#201498</b><br><small>15/05/2026</small></td>
+        <td>Suporte N1</td>
+        <td>EFD ICMS/IPI</td>
+        <td>ERRO APURAÇÃO ICMS</td>
+        <td>Orientação ao usuário </td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#201190</b><br><small>13/05/2026</small></td>
+        <td>Suporte N2</td>
+        <td>Armazenamento XML de CTE de Terceiro</td>
+        <td>CONVERSÃO CTE DE TERCEIROS</td>
+        <td>Cte não baixado devido a ajuste realizado no DFe, subir paliativamente por se tratar de CTE antigo</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#201047</b><br><small>12/05/2026</small></td>
+        <td>Erro/Bug</td>
+        <td>CTE - Conhecimento de Transporte Mensageria</td>
+        <td>COMPLIANCE - STATUS DIVERGENTE...</td>
+        <td>Instabilidade na Integração</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#200888</b><br><small>08/05/2026</small></td>
+        <td>Erro/Bug</td>
+        <td>REINF</td>
+        <td>REINF R-2010 - ERRO NO ENVIO</td>
+        <td>Solicitada janela de atualização para correção da geração do Reinf - GAP identificado e sanado</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#200851</b><br><small>08/05/2026</small></td>
+        <td>Suporte N1</td>
+        <td>REINF</td>
+        <td>IRRF MENOR QUE 10,00 REINF</td>
+        <td>Ajuste de Parâmetros</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#200698</b><br><small>07/05/2026</small></td>
+        <td>Suporte N1</td>
+        <td>Entrada Automatica de CTe</td>
+        <td>INTEGRAÇÃO CTE&#x27;S 04-2026</td>
+        <td>CTEs enviados e integrados no ambiente HML</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#200619</b><br><small>06/05/2026</small></td>
+        <td>Erro/Bug</td>
+        <td>NFE Nota Fiscal Eletronica Mensageria</td>
+        <td>NOTAS FISCAIS LOGIX - LEGADO </td>
+        <td>Pasta SFTP apresentou inconsistência na montagem, após atuação de Infra solução validada</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#200570</b><br><small>06/05/2026</small></td>
+        <td>Suporte N1</td>
+        <td>CTE - Conhecimento de Transporte Mensageria</td>
+        <td>2 CTE&#x27;S QUE SÃO INTEGRARAM NO ...</td>
+        <td>CTEs enviados e integrados no ambiente HML</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#200568</b><br><small>06/05/2026</small></td>
+        <td>Criar Usuário</td>
+        <td>Help Desk</td>
+        <td>CRIAÇÃO DE USER</td>
+        <td>Criação de Usuário</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#200542</b><br><small>05/05/2026</small></td>
+        <td>Adaptativa</td>
+        <td>NFSE Nota Fiscal de Servico Eletronica Mensageria</td>
+        <td>NOTA FISCAL SERVIÇO - CAMPINA ...</td>
+        <td>Mudança no leiaute padrão da prefeitura de Campina Grande do Sul</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#200232</b><br><small>30/04/2026</small></td>
+        <td>Suporte N1</td>
+        <td>NFSE Nota Fiscal de Servico Eletronica Mensageria</td>
+        <td>ALTERAÇÃO DE LANÇAMENTO</td>
+        <td>Solicitação de alteração de status de lançamentos</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#200154</b><br><small>30/04/2026</small></td>
+        <td>Instabilidade Municipal</td>
+        <td>NFSE Nota Fiscal de Servico Eletronica Mensageria</td>
+        <td>NFS EM PROCESSAMENTO NA PREFEI...</td>
+        <td>A prefeitura de Gravataí manteve as notas em processamento sem o retorno dos documentos, após o reenvio as notas houve a recuperação dos status de autorização</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#199223</b><br><small>22/04/2026</small></td>
+        <td>Instabilidade Municipal</td>
+        <td>NFSE Nota Fiscal de Servico Eletronica Mensageria</td>
+        <td>ERROR COMPLIANCE - CONVERTER N...</td>
+        <td>A prefeitura de Campina Grande do Sul retornou erro genérico, após o reenvio as notas foram autorizadas</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#198102</b><br><small>10/04/2026</small></td>
+        <td>Erro/Bug</td>
+        <td>Entrada Automatica de CTe</td>
+        <td>CTES NÃO CONSTAM PARA CONVERSÃ...</td>
+        <td>Instabilidade na consulta de NSU junto a Sefaz, serviço em loopping</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#195464</b><br><small>17/03/2026</small></td>
+        <td>Erro/Bug</td>
+        <td>NFSE Nota Fiscal de Servico Eletronica Mensageria</td>
+        <td>PROBLEMAS ERRO COMPLIANCE - GR...</td>
+        <td>Corrigido o envio do Pis/Cofins devido para o município de Gravataí</td>
+      </tr>
+    
+      <tr>
+        <td class="nowrap"><b>#190823</b><br><small>23/01/2026</small></td>
+        <td>Melhoria</td>
+        <td>EFD ICMS/IPI</td>
+        <td>REGRA DE NEGÓCIOS MG</td>
+        <td>Aguardando teste em PRD</td>
+      </tr>
+    
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+</body>
+</html>
